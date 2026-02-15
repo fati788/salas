@@ -2,10 +2,12 @@ package com.example.salas.services;
 
 import com.example.salas.dtos.ReservaCreateDto;
 import com.example.salas.dtos.ReservaDto;
+import com.example.salas.entities.Departamento;
 import com.example.salas.entities.Reserva;
 import com.example.salas.entities.Sala;
 import com.example.salas.entities.Usuario;
 import com.example.salas.mappers.ReservaMapper;
+import com.example.salas.repositories.DepartamentoRepository;
 import com.example.salas.repositories.ReservaRepository;
 import com.example.salas.repositories.SalaRepository;
 import com.example.salas.repositories.UsuarioRepository;
@@ -27,26 +29,40 @@ public class ReservaServiceImpl implements ReservaService {
     private ReservaRepository reservaRepository;
     @Autowired
     private ReservaMapper reservaMapper;
-
+    @Autowired
+    private DepartamentoRepository departamentoRepository;
 
     @Override
     public ReservaDto create(ReservaCreateDto dto) {
-        // Obtener la sala de la reserva
+
+
+        // Buscar el departamento
+        Departamento departamento = departamentoRepository.findById(dto.departamentoId())
+                .orElseThrow(() -> new EntityNotFoundException("Departamento no encontrado con id: " + dto.departamentoId()));
+        // Obtener sala
         Sala sala = salaRepository.findById(dto.salaId())
                 .orElseThrow(() -> new EntityNotFoundException("Sala no encontrada"));
 
-        // Obtener el usuario que hace la reserva
+        // Obtener usuario
         Usuario usuario = usuarioRepository.findById(dto.usuarioId())
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
 
-        // Crear una reserva nueva
-        Reserva reserva = new Reserva();
+        List<Reserva> solapadas = reservaRepository.findReservasSolapadas(
+                dto.salaId(),
+                dto.fecha(),
+                dto.horaInicio(),
+                dto.horaFin()
+        );
 
-        // Asignar sala y usuario
+        if (!solapadas.isEmpty()) {
+            throw new IllegalStateException("La sala ya está ocupada en ese horario");
+        }
+
+        // Crear reserva
+        Reserva reserva = new Reserva();
         reserva.setSala(sala);
         reserva.setUsuario(usuario);
-
-        // Sacar los demás campos del DTO y asignarlos
+        reserva.setDepartamento(departamento);  // ⚡ Muy importante
         reserva.setFecha(dto.fecha());
         reserva.setHoraInicio(dto.horaInicio());
         reserva.setHoraFin(dto.horaFin());
@@ -55,12 +71,11 @@ public class ReservaServiceImpl implements ReservaService {
         reserva.setBaja(false);
         reserva.setFechaCre(LocalDateTime.now());
 
-        // Guardar la reserva en la base de datos
         reserva = reservaRepository.save(reserva);
 
-        // Devolver la reserva creada como DTO
         return reservaMapper.toDto(reserva);
     }
+
 
     @Override
     public List<ReservaDto> findAll() {
@@ -74,13 +89,13 @@ public class ReservaServiceImpl implements ReservaService {
 
     @Override
     public boolean delete(Long id) {
-       Optional<Reserva> reserva = reservaRepository.findById(id);
-       if (reserva.isPresent()){
-           reservaRepository.delete(reserva.get());
-           return  true;
-       }else {
-           return  false;
-       }
+        Optional<Reserva> reserva = reservaRepository.findById(id);
+        if (reserva.isPresent()){
+            reservaRepository.delete(reserva.get());
+            return  true;
+        }else {
+            return  false;
+        }
     }
 
     @Override
@@ -96,4 +111,47 @@ public class ReservaServiceImpl implements ReservaService {
                 .map(reservaMapper::toDto)
                 .toList();
     }
+
+    @Override
+    public ReservaDto update(Long id, ReservaCreateDto dto) {
+
+        Reserva reserva = reservaRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Reserva no encontrada"));
+
+        // Obtener sala
+        Sala sala = salaRepository.findById(dto.salaId())
+                .orElseThrow(() -> new EntityNotFoundException("Sala no encontrada"));
+
+        // Obtener usuario
+        Usuario usuario = usuarioRepository.findById(dto.usuarioId())
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
+
+        // Comprobar solapamiento EXCLUYENDO la propia reserva
+        List<Reserva> solapadas = reservaRepository.findReservasSolapadas(
+                        dto.salaId(),
+                        dto.fecha(),
+                        dto.horaInicio(),
+                        dto.horaFin()
+                ).stream()
+                .filter(r -> !r.getId().equals(id)) // 👈 IMPORTANTE
+                .toList();
+
+        if (!solapadas.isEmpty()) {
+            throw new IllegalStateException("La sala ya está ocupada en ese horario");
+        }
+
+        // Actualizar campos
+        reserva.setSala(sala);
+        reserva.setUsuario(usuario);
+        reserva.setFecha(dto.fecha());
+        reserva.setHoraInicio(dto.horaInicio());
+        reserva.setHoraFin(dto.horaFin());
+        reserva.setObservaciones(dto.observaciones());
+        reserva.setComentario(dto.comentario());
+
+        reserva = reservaRepository.save(reserva);
+
+        return reservaMapper.toDto(reserva);
+    }
+
 }

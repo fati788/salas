@@ -13,6 +13,6 @@ public interface ReservaService {
     public Optional<ReservaDto> findById(Long id);
     public boolean delete(Long id);
     List<ReservaDto> findByFecha(String fecha);
-
+    public ReservaDto update(Long id, ReservaCreateDto dto);
 
 }

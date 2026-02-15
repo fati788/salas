@@ -9,5 +9,6 @@ public record ReservaCreateDto(        LocalDate fecha,
                                        String observaciones,
                                        String comentario,
                                        Long salaId,
-                                       Long usuarioId) {
+                                       Long usuarioId,
+                                       Long departamentoId) {
 }

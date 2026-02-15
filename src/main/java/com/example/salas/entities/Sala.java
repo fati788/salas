@@ -20,10 +20,6 @@ public class Sala {
     private Boolean  obsoleta;
     private Boolean oculta;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    //, nullable = false
-    @JoinColumn(name = "departamento_id" , nullable = false)
-    private Departamento departamento;
 
     @OneToMany(mappedBy = "sala", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reserva> reservas;

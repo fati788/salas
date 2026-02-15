@@ -24,7 +24,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    // ✅ CREATE
+    //  CREATE
     @Override
     @Transactional
     public UsuarioDto create(UsuarioCreateDto dto) {
@@ -32,7 +32,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         return mapper.toDto(usuarioRepository.save(usuario));
     }
 
-    // ✅ READ ALL
+    //  READ ALL
     @Override
     public List<UsuarioDto> findAll() {
         return usuarioRepository.findAll()
@@ -41,7 +41,7 @@ public class UsuarioServiceImpl implements UsuarioService {
                 .toList();
     }
 
-    // ✅ READ BY ID
+    // READ BY ID
     @Override
     public Optional<UsuarioDto> findById(Long id) {
         return usuarioRepository.findById(id)
@@ -62,7 +62,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         return mapper.toDto(usuarioRepository.save(usuario));
     }
 
-    // ✅ DELETE
+    // DELETE
     @Override
     @Transactional
     public boolean delete(Long id) {

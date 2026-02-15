@@ -22,6 +22,6 @@ public class Departamento {
     private String descripcion;
 
     @OneToMany(mappedBy = "departamento", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Sala> salas;
+    private List<Reserva> reservas;
 
 }

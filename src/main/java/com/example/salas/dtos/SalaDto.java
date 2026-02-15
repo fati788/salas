@@ -10,6 +10,5 @@ public record SalaDto( Long id,
                        Integer orden,
                        Boolean obsoleta,
                        Boolean oculta ,
-                       DepartamentoDto departament,
                        List<ReservaResumenDto> reservas) {
 }

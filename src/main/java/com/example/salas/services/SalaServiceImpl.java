@@ -17,17 +17,13 @@ import java.util.Optional;
 public class SalaServiceImpl implements SalaService {
     @Autowired
     private SalaRepository salaRepository;
-    @Autowired
-   private DepartamentoRepository departamentoRepository;
 
     @Autowired
     private SalaMapper salaMapper;
 
     @Override
     public SalaDto create(SalaCreatetoDto dto) {
-        // Buscar el departamento
-        Departamento departamento = departamentoRepository.findById(dto.departamentoId())
-                .orElseThrow(() -> new EntityNotFoundException("Departamento no encontrado con id: " + dto.departamentoId()));
+
 
         // Crear la sala y asignar campos
         Sala sala = new Sala();
@@ -35,7 +31,7 @@ public class SalaServiceImpl implements SalaService {
         sala.setOrden(dto.orden());
         sala.setObsoleta(dto.obsoleta());
         sala.setOculta(dto.oculta());
-        sala.setDepartamento(departamento);  // ⚡ Muy importante
+
 
         // Guardar la sala
         sala = salaRepository.save(sala);
@@ -47,27 +43,27 @@ public class SalaServiceImpl implements SalaService {
     /*@Override
     public SalaDto update(Long id, SalaCreatetoDto dto) {
 
-        // 1️⃣ Buscar la sala existente
+        // 1️ Buscar la sala existente
         Sala sala = salaRepository.findById(id)
                 .orElseThrow(() ->
                         new EntityNotFoundException("Sala no encontrada"));
 
-        // 2️⃣ Buscar el departamento (si cambia)
+        // 2 Buscar el departamento (si cambia)
         Departamento departamento = departamentoRepository.findById(dto.departamentoId())
                 .orElseThrow(() ->
                         new EntityNotFoundException("Departamento no encontrado"));
 
-        // 3️⃣ Actualizar campos
+        // 3 Actualizar campos
         sala.setDescripcion(dto.descripcion());
         sala.setOrden(dto.orden());
         sala.setObsoleta(dto.obsoleta());
         sala.setOculta(dto.oculta());
         sala.setDepartamento(departamento);
 
-        // 4️⃣ Guardar cambios
+        //  Guardar cambios
         sala = salaRepository.save(sala);
 
-        // 5️⃣ Devolver DTO
+        // 5 Devolver DTO
         return salaMapper.toDto(sala);
     }
 */

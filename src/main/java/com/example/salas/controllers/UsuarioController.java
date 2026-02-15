@@ -20,13 +20,13 @@ public class UsuarioController {
         this.service = service;
     }
 
-    // ✅ Obtener todos
+
     @GetMapping
     public ResponseEntity<List<UsuarioDto>> getAllUsuarios() {
         return ResponseEntity.ok(service.findAll());
     }
 
-    // ✅ Obtener por id
+    //  Obtener por id
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioDto> getUsuarioById(@PathVariable Long id) {
 
@@ -35,7 +35,7 @@ public class UsuarioController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // ✅ Crear
+    // Crear Usuario
     @PostMapping
     public ResponseEntity<UsuarioDto> createUsuario(@RequestBody UsuarioCreateDto dto) {
 
@@ -44,7 +44,7 @@ public class UsuarioController {
                 .body(service.create(dto));
     }
 
-    // ✅ Actualizar
+    //  Actualizar usuario
     @PutMapping("/{id}")
     public ResponseEntity<UsuarioDto> updateUsuario(
             @PathVariable Long id,
@@ -53,7 +53,7 @@ public class UsuarioController {
         return ResponseEntity.ok(service.update(id, dto));
     }
 
-    // ✅ Eliminar
+    //  Eliminar usuario
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUsuario(@PathVariable Long id) {
 

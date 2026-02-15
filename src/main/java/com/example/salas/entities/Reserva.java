@@ -28,6 +28,11 @@ public class Reserva {
     private LocalDateTime fechaCre;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    //, nullable = false
+    @JoinColumn(name = "departamento_id" , nullable = false)
+    private Departamento departamento;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sala_id", nullable = false)
     private Sala sala;
     @ManyToOne(fetch = FetchType.LAZY )

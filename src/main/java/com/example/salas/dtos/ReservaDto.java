@@ -12,5 +12,7 @@ public record ReservaDto(  Long id,
                                   String comentario,
                                   Boolean baja,
                                   LocalDateTime fechaCre ,
-                           UsuarioResumenDto usuario) {
+                                 SalaResumenDto sala,
+                                UsuarioResumenDto usuario,
+                                DepartamentoResumenDto departamento) {
 }

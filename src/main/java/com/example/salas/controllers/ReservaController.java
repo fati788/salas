@@ -3,6 +3,7 @@ package com.example.salas.controllers;
 import com.example.salas.dtos.ReservaCreateDto;
 import com.example.salas.dtos.ReservaDto;
 import com.example.salas.services.ReservaService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +20,18 @@ public class ReservaController {
     private ReservaService reservaService;
 
     @PostMapping
-    public ResponseEntity<ReservaDto> saveReserva(@RequestBody ReservaCreateDto reserva){
-        return ResponseEntity.status(HttpStatus.CREATED).body(reservaService.create(reserva));
+    public ResponseEntity<?> saveReserva(@RequestBody ReservaCreateDto reserva){
+        try {
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(reservaService.create(reserva));
+        } catch (IllegalStateException e) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(e.getMessage());
+        }
     }
+
     @GetMapping
     public ResponseEntity<List<ReservaDto>> findAll(){
         return ResponseEntity.ok(reservaService.findAll());
@@ -42,7 +52,7 @@ public class ReservaController {
         }
     }
 
-    //Buscar por fecha rñergldfshgd:
+    //Buscar por fecha:
     @GetMapping("/fecha/{fecha}")
     public ResponseEntity<List<ReservaDto>> reservasPorFecha(
             @PathVariable String fecha
@@ -50,5 +60,21 @@ public class ReservaController {
         return ResponseEntity.ok(reservaService.findByFecha(fecha));
     }
 
+    //Modificar una reserva:
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateReserva(
+            @PathVariable Long id,
+            @RequestBody ReservaCreateDto reserva) {
+
+        try {
+            return ResponseEntity.ok(reservaService.update(id, reserva));
+        } catch (IllegalStateException e) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(e.getMessage());
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 }
