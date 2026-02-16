@@ -1,6 +1,6 @@
 package com.example.salas.dtos;
 
-public record SalaResumenDto(  Long id,
-                               String descripcion) {
+public record SalaResumenDto(Long id,
+                             String descripcion) {
 
 }

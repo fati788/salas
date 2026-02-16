@@ -133,7 +133,7 @@ public class ReservaServiceImpl implements ReservaService {
                         dto.horaInicio(),
                         dto.horaFin()
                 ).stream()
-                .filter(r -> !r.getId().equals(id)) // 👈 IMPORTANTE
+                .filter(r -> !r.getId().equals(id)) //
                 .toList();
 
         if (!solapadas.isEmpty()) {
@@ -148,7 +148,7 @@ public class ReservaServiceImpl implements ReservaService {
         reserva.setHoraFin(dto.horaFin());
         reserva.setObservaciones(dto.observaciones());
         reserva.setComentario(dto.comentario());
-
+        reserva.setFechaMod(LocalDateTime.now());
         reserva = reservaRepository.save(reserva);
 
         return reservaMapper.toDto(reserva);

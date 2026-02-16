@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DepartamentoService {
-    public DepartamentoDto create(DepartamentoCreateDto dto);
+     DepartamentoDto create(DepartamentoCreateDto dto);
 
 
     List<DepartamentoDto> findAll();

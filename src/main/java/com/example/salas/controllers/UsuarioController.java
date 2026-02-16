@@ -1,13 +1,17 @@
 package com.example.salas.controllers;
 
+import com.example.salas.dtos.LoginDto;
 import com.example.salas.dtos.UsuarioCreateDto;
 import com.example.salas.dtos.UsuarioDto;
+import com.example.salas.entities.Usuario;
+import com.example.salas.repositories.UsuarioRepository;
 import com.example.salas.services.UsuarioService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/usuarios")
@@ -15,11 +19,15 @@ import java.util.List;
 public class UsuarioController {
 
     private final UsuarioService service;
+    private UsuarioRepository usuarioRepository;
 
     public UsuarioController(UsuarioService service) {
         this.service = service;
     }
-
+    @PostMapping("/login")
+    public ResponseEntity<UsuarioDto> login(@RequestBody LoginDto loginDto) {
+        return service.login(loginDto);
+    }
 
     @GetMapping
     public ResponseEntity<List<UsuarioDto>> getAllUsuarios() {

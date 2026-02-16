@@ -26,6 +26,7 @@ public class Reserva {
     private String comentario;
     private Boolean baja = false;
     private LocalDateTime fechaCre;
+    private  LocalDateTime fechaMod;
 
     @ManyToOne(fetch = FetchType.LAZY)
     //, nullable = false

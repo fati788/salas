@@ -39,34 +39,6 @@ public class SalaServiceImpl implements SalaService {
         // Devolver DTO
         return salaMapper.toDto(sala);
     }
-
-    /*@Override
-    public SalaDto update(Long id, SalaCreatetoDto dto) {
-
-        // 1️ Buscar la sala existente
-        Sala sala = salaRepository.findById(id)
-                .orElseThrow(() ->
-                        new EntityNotFoundException("Sala no encontrada"));
-
-        // 2 Buscar el departamento (si cambia)
-        Departamento departamento = departamentoRepository.findById(dto.departamentoId())
-                .orElseThrow(() ->
-                        new EntityNotFoundException("Departamento no encontrado"));
-
-        // 3 Actualizar campos
-        sala.setDescripcion(dto.descripcion());
-        sala.setOrden(dto.orden());
-        sala.setObsoleta(dto.obsoleta());
-        sala.setOculta(dto.oculta());
-        sala.setDepartamento(departamento);
-
-        //  Guardar cambios
-        sala = salaRepository.save(sala);
-
-        // 5 Devolver DTO
-        return salaMapper.toDto(sala);
-    }
-*/
     @Override
     public boolean delete(Long id) {
         Optional<Sala> sala = salaRepository.findById(id);

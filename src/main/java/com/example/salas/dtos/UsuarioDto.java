@@ -4,6 +4,6 @@ import java.util.List;
 
 public record UsuarioDto(Long id,
                          String nombre,
-                         Integer TipoAcceso,
+                         Integer tipoAcceso,
                          List<ReservaResumenDto> reservas) {
 }

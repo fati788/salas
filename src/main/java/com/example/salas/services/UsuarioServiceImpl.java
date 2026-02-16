@@ -1,11 +1,13 @@
 package com.example.salas.services;
 
+import com.example.salas.dtos.LoginDto;
 import com.example.salas.dtos.UsuarioCreateDto;
 import com.example.salas.dtos.UsuarioDto;
 import com.example.salas.entities.Usuario;
 import com.example.salas.mappers.UsuarioMapper;
 import com.example.salas.repositories.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -74,4 +76,28 @@ public class UsuarioServiceImpl implements UsuarioService {
 
         return false;
     }
+    @Override
+    public ResponseEntity<UsuarioDto> login(LoginDto loginDto) {
+
+        Optional<Usuario> usuarioOptional =
+                usuarioRepository.findByEmail(loginDto.email());
+
+        // Si no existe el usuario
+        if (usuarioOptional.isEmpty()) {
+            return ResponseEntity.status(401).build();
+        }
+
+        Usuario usuario = usuarioOptional.get();
+
+        // Validar contraseña (texto plano por ahora)
+        if (!usuario.getPassword().equals(loginDto.password())) {
+            return ResponseEntity.status(401).build();
+        }
+
+        // Convertir a DTO
+        UsuarioDto usuarioDto = mapper.toDto(usuario);
+
+        return ResponseEntity.ok(usuarioDto);
+    }
+
 }

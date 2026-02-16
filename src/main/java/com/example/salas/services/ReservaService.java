@@ -8,11 +8,11 @@ import java.util.Optional;
 
 public interface ReservaService {
 
-    public ReservaDto create(ReservaCreateDto dto);
-    public List<ReservaDto> findAll();
-    public Optional<ReservaDto> findById(Long id);
-    public boolean delete(Long id);
+     ReservaDto create(ReservaCreateDto dto);
+     List<ReservaDto> findAll();
+     Optional<ReservaDto> findById(Long id);
+     boolean delete(Long id);
     List<ReservaDto> findByFecha(String fecha);
-    public ReservaDto update(Long id, ReservaCreateDto dto);
+     ReservaDto update(Long id, ReservaCreateDto dto);
 
 }
